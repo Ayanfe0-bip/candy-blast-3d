@@ -336,6 +336,148 @@
   opacity: 1;
   transform: translate(-50%, 0);
   }
+    /* =================================
+   STAGE 4 — GAMEPLAY INTERFACE
+================================= */
+
+.gameplay-hud {
+  position: fixed;
+  inset: 0;
+  z-index: 9;
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 18px;
+  pointer-events: none;
+}
+
+.gameplay-hud.active {
+  display: flex;
+}
+
+.gameplay-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.gameplay-stat {
+  background: #321052eF;
+  border: 1px solid #ffdf8a;
+  border-radius: 14px;
+  padding: 10px 14px;
+  color: #fff1cf;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 900;
+  box-shadow: 0 4px 15px #0005;
+}
+
+.gameplay-stat strong {
+  display: block;
+  color: #ffdf68;
+  font-size: 21px;
+  margin-top: 4px;
+}
+
+.gameplay-back {
+  pointer-events: auto;
+  border: 1px solid #ffdf8a;
+  border-radius: 13px;
+  padding: 12px;
+  background: #321052;
+  color: white;
+  font-weight: 900;
+}
+
+.gameplay-objective {
+  align-self: center;
+  margin-top: 12px;
+  padding: 10px 18px;
+  border-radius: 20px;
+  background: #351354eF;
+  border: 1px solid #ffdf8a;
+  color: #fff1cf;
+  font-size: 12px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.gameplay-bottom {
+  align-self: center;
+  width: min(100%, 350px);
+  padding: 13px;
+  border: 1px solid #ffdf8a;
+  border-radius: 18px;
+  background: #321052eF;
+  color: #ffedbd;
+  font-size: 12px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.game-result {
+  position: fixed;
+  inset: 0;
+  z-index: 25;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: #100321dd;
+}
+
+.game-result.open {
+  display: flex;
+}
+
+.game-result-card {
+  width: min(100%, 360px);
+  padding: 28px 22px;
+  border: 2px solid #ffdf8a;
+  border-radius: 24px;
+  background: linear-gradient(145deg, #65258e, #241044);
+  text-align: center;
+  color: white;
+}
+
+.game-result-card h2 {
+  color: #ffdf68;
+  font-size: 27px;
+  margin-bottom: 12px;
+}
+
+.game-result-card p {
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.game-result-card button {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid #ffe49a;
+  border-radius: 13px;
+  background: linear-gradient(#fff2b8, #ffbf48);
+  color: #4a1762;
+  font-weight: 1000;
+  font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  .gameplay-hud {
+    padding: 12px;
+  }
+
+  .gameplay-stat {
+    padding: 8px;
+    font-size: 10px;
+  }
+
+  .gameplay-stat strong {
+    font-size: 18px;
+  }
+}
     @media (max-width: 600px) {
       .hud {
         top: 18px;
@@ -573,6 +715,65 @@
 
 <div class="menu-toast" id="menuToast">
   Welcome to Candy Blast 3D!
+</div>
+  <!-- STAGE 4 — GAMEPLAY HUD -->
+
+<div class="gameplay-hud" id="gameplayHUD">
+
+  <div>
+    <div class="gameplay-top">
+
+      <button class="gameplay-back"
+        onclick="exitGameplay()">
+        ← MENU
+      </button>
+
+      <div class="gameplay-stat">
+        SCORE
+        <strong id="gameScore">0</strong>
+      </div>
+
+      <div class="gameplay-stat">
+        MOVES
+        <strong id="gameMoves">30</strong>
+      </div>
+
+      <div class="gameplay-stat">
+        LEVEL
+        <strong id="gameLevel">1</strong>
+      </div>
+
+    </div>
+
+    <div class="gameplay-objective">
+      🍬 MATCH CANDIES AND EARN POINTS!
+    </div>
+  </div>
+
+  <div class="gameplay-bottom" id="gameInstruction">
+    Select two neighbouring candies to swap.
+  </div>
+
+</div>
+
+<!-- GAME RESULTS -->
+
+<div class="game-result" id="gameResult">
+
+  <div class="game-result-card">
+
+    <h2 id="gameResultTitle">ROYAL VICTORY!</h2>
+
+    <p id="gameResultMessage">
+      Your candy adventure continues!
+    </p>
+
+    <button onclick="closeGameResult()">
+      CONTINUE
+    </button>
+
+  </div>
+
 </div>
   <script type="module">
     import * as THREE from
@@ -1142,6 +1343,425 @@ animatedCandies.forEach((candy, index) => {
   shine2.material.opacity = 0.65;
 
 });
+    /* =====================================
+   STAGE 4 — ROYAL 3D MATCH-3 BOARD
+===================================== */
+
+const BOARD_SIZE = 8;
+const TILE_SIZE = 0.9;
+
+const boardGroup = new THREE.Group();
+boardGroup.position.set(0, 2.5, 6);
+boardGroup.visible = false;
+
+scene.add(boardGroup);
+
+const candyBoard = [];
+
+const boardCandyMaterials = [
+  pink,
+  purple,
+  turquoise,
+  candyYellow,
+  red,
+  white
+];
+
+/* BOARD BACKGROUND */
+
+const boardBackground = addMesh(
+  new THREE.BoxGeometry(7.55, 7.55, 0.35),
+  new THREE.MeshStandardMaterial({
+    color: 0x351052,
+    metalness: 0.45,
+    roughness: 0.3
+  }),
+  0, 0, 0,
+  boardGroup
+);
+
+/* GOLDEN BOARD BORDER */
+
+const boardBorderMaterial =
+  new THREE.MeshStandardMaterial({
+    color: 0xffd45c,
+    metalness: 0.8,
+    roughness: 0.2
+  });
+
+const borderTop = addMesh(
+  new THREE.BoxGeometry(7.9, 0.16, 0.45),
+  boardBorderMaterial,
+  0, 3.85, 0,
+  boardGroup
+);
+
+const borderBottom = addMesh(
+  new THREE.BoxGeometry(7.9, 0.16, 0.
+          /* =========================================
+   STAGE 4 — MATCH-3 GAME ENGINE
+========================================= */
+
+let selectedCandy = null;
+let gameplayActive = false;
+let playerScore = 0;
+let remainingMoves = 30;
+
+const boardRaycaster = new THREE.Raycaster();
+const boardPointer = new THREE.Vector2();
+
+/* UPDATE GAME DISPLAY */
+
+function updateGameDisplay() {
+
+  document.getElementById("gameScore").textContent =
+    playerScore;
+
+  document.getElementById("gameMoves").textContent =
+    remainingMoves;
+
+}
+
+/* SET CANDY POSITION */
+
+function positionBoardCandy(candy, row, col) {
+
+  candy.row = row;
+  candy.col = col;
+
+  candy.object.position.set(
+    (col - 3.5) * TILE_SIZE,
+    (3.5 - row) * TILE_SIZE,
+    0.32
+  );
+
+  candy.object.userData.row = row;
+  candy.object.userData.col = col;
+
+}
+
+/* CREATE A RANDOM CANDY */
+
+function randomBoardColor() {
+
+  return Math.floor(
+    Math.random() * boardCandyMaterials.length
+  );
+
+}
+
+/* FIND ALL MATCHES */
+
+function findCandyMatches() {
+
+  const matches = new Set();
+
+  // HORIZONTAL MATCHES
+
+  for (let row = 0; row < BOARD_SIZE; row++) {
+
+    let count = 1;
+
+    for (let col = 1; col <= BOARD_SIZE; col++) {
+
+      const current =
+        col < BOARD_SIZE
+          ? candyBoard[row][col]
+          : null;
+
+      const previous =
+        candyBoard[row][col - 1];
+
+      if (
+        current &&
+        previous &&
+        current.color === previous.color
+      ) {
+
+        count++;
+
+      } else {
+
+        if (count >= 3) {
+
+          for (
+            let i = col - count;
+            i < col;
+            i++
+          ) {
+
+            matches.add(`${row},${i}`);
+
+          }
+
+        }
+
+        count = 1;
+
+      }
+
+    }
+
+  }
+
+  // VERTICAL MATCHES
+
+  for (let col = 0; col < BOARD_SIZE; col++) {
+
+    let count = 1;
+
+    for (let row = 1; row <= BOARD_SIZE; row++) {
+
+      const current =
+        row < BOARD_SIZE
+          ? candyBoard[row][col]
+          : null;
+
+      const previous =
+        candyBoard[row - 1][col];
+
+      if (
+        current &&
+        previous &&
+        current.color === previous.color
+      ) {
+
+        count++;
+
+      } else {
+
+        if (count >= 3) {
+
+          for (
+            let i = row - count;
+            i < row;
+            i++
+          ) {
+
+            matches.add(`${i},${col}`);
+
+          }
+
+        }
+
+        count = 1;
+
+      }
+
+    }
+
+  }
+
+  return Array.from(matches).map(key => {
+
+    const [row, col] = key.split(",").map(Number);
+
+    return { row, col };
+
+  });
+
+}
+
+/* SWAP TWO CANDIES */
+
+function swapBoardCandies(first, second) {
+
+  const firstRow = first.row;
+  const firstCol = first.col;
+
+  const secondRow = second.row;
+  const secondCol = second.col;
+
+  candyBoard[firstRow][firstCol] = second;
+  candyBoard[secondRow][secondCol] = first;
+
+  positionBoardCandy(second, firstRow, firstCol);
+  positionBoardCandy(first, secondRow, secondCol);
+
+}
+
+/* REMOVE MATCHED CANDIES */
+
+function removeCandyMatches(matches) {
+
+  matches.forEach(match => {
+
+    const candy =
+      candyBoard[match.row][match.col];
+
+    if (candy) {
+
+      boardGroup.remove(candy.object);
+      /* =========================================
+   STAGE 4 — GAMEPLAY CONTROL
+========================================= */
+
+const menuCameraPosition = camera.position.clone();
+const menuCameraTarget = new THREE.Vector3(0, 2, 0);
+
+const LEVEL_TARGET_SCORE = 3000;
+
+/* START GAME */
+
+function startGameplay() {
+
+  playerScore = 0;
+  remainingMoves = 30;
+  selectedCandy = null;
+  gameplayActive = true;
+
+  prepareCandyBoard();
+
+  boardGroup.visible = true;
+  island.visible = false;
+
+  camera.position.set(
+    0,
+    2.5,
+    22.5
+  );
+
+  camera.lookAt(
+    0,
+    2.5,
+    6
+  );
+
+  document.getElementById(
+    "gameplayHUD"
+  ).classList.add("active");
+
+  document.getElementById(
+    "gameLevel"
+  ).textContent =
+    localStorage.getItem("candyLevel") || 1;
+
+  document.getElementById(
+    "gameInstruction"
+  ).textContent =
+    "Select two neighbouring candies to swap.";
+
+  document.getElementById(
+    "gameResult"
+  ).classList.remove("open");
+
+  updateGameDisplay();
+
+  document.querySelectorAll(
+    ".game-menu, .top-stats, .bottom-menu"
+  ).forEach(element => {
+    element.style.display = "none";
+  });
+
+}
+
+/* RETURN TO MAIN MENU */
+
+function exitGameplay() {
+
+  gameplayActive = false;
+  selectedCandy = null;
+
+  boardGroup.visible = false;
+  island.visible = true;
+
+  camera.position.copy(menuCameraPosition);
+
+  camera.lookAt(menuCameraTarget);
+
+  document.getElementById(
+    "gameplayHUD"
+  ).classList.remove("active");
+
+  document.getElementById(
+    "gameResult"
+  ).classList.remove("open");
+
+  document.querySelectorAll(
+    ".game-menu, .top-stats, .bottom-menu"
+  ).forEach(element => {
+    element.style.display = "";
+  });
+
+}
+
+/* CHECK GAME PROGRESS */
+
+function checkGameStatus() {
+
+  if (!gameplayActive) return;
+
+  if (playerScore >= LEVEL_TARGET_SCORE) {
+
+    gameplayActive = false;
+
+    document.getElementById(
+      "gameResultTitle"
+    ).textContent =
+      "ROYAL VICTORY! 👑";
+
+    document.getElementById(
+      "gameResultMessage"
+    ).textContent =
+      "Amazing! You reached the level target and conquered the Candy Kingdom!";
+
+    document.getElementById(
+      "gameResult"
+    ).classList.add("open");
+
+    const currentLevel =
+      Number(localStorage.getItem("candyLevel") || 1);
+
+    localStorage.setItem(
+      "candyLevel",
+      Math.min(currentLevel + 1, 100)
+    );
+
+    return;
+
+  }
+
+  if (remainingMoves <= 0) {
+
+    gameplayActive = false;
+
+    document.getElementById(
+      "gameResultTitle"
+    ).textContent =
+      "GAME OVER!";
+
+    document.getElementById(
+      "gameResultMessage"
+    ).textContent =
+      "Your moves are finished. Try again and reach the target score!";
+
+    document.getElementById(
+      "gameResult"
+    ).classList.add("open");
+
+  }
+
+}
+
+/* CLOSE RESULT WINDOW */
+
+function closeGameResult() {
+
+  document.getElementById(
+    "gameResult"
+  ).classList.remove("open");
+
+  exitGameplay();
+
+}
+
+/* MAKE GAME FUNCTIONS AVAILABLE */
+
+window.startGameplay = startGameplay;
+window.exitGameplay = exitGameplay;
+window.closeGameResult = closeGameResult;
+
+console.log("Gameplay controls ready!");
     // CLOUDS
 
     function createCloud(x, y, z) {
