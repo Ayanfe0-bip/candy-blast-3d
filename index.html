@@ -1494,6 +1494,25 @@ let candyLevel = 1;
 );
 
 let selectedCandyLevel = unlockedCandyLevel;  let selectedKingdom = 1;
+    /* UPDATE GAMEPLAY DISPLAY */
+
+function updateGameDisplay() {
+  const scoreDisplay = document.getElementById("gameScore");
+  const movesDisplay = document.getElementById("gameMoves");
+  const levelDisplay = document.getElementById("gameLevel");
+
+  if (scoreDisplay) {
+    scoreDisplay.textContent = candyScore;
+  }
+
+  if (movesDisplay) {
+    movesDisplay.textContent = remainingMoves;
+  }
+
+  if (levelDisplay) {
+    levelDisplay.textContent = candyLevel;
+  }
+}
 let gameplayActive = false;
 let selectedCandy = null;
 let boardBusy = false;
