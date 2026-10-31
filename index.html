@@ -1167,7 +1167,8 @@
         ]
       );
     }
-          new THREE.BoxGeometry(0.9, 1.65, 0.12),
+              addMesh(
+      new THREE.BoxGeometry(0.9, 1.65, 0.12),
       purple,
       0, 1.45, 1.08,
       palace
@@ -1310,7 +1311,7 @@
 
     // DECORATIVE CANDIES
 
-    const candyMaterials = [
+   const stage3CandyMaterials = [ 
       pink,
       turquoise,
       candyYellow,
@@ -1331,8 +1332,8 @@
         0.65 + Math.random() * 0.5,
         z,
         0.18 + Math.random() * 0.2,
-        candyMaterials[
-          Math.floor(Math.random() * candyMaterials.length)
+        stage3CandyMaterials[
+          Math.floor(Math.random() * stage3CandyMaterials.length
         ]
       );
     }
