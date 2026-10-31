@@ -612,28 +612,8 @@
       Complete levels to unlock new kingdoms.
     </p>
 
-    <div class="level-grid">
-
-      <button class="level-tile"
-        onclick="showGameMessage()">
-        1
-      </button>
-
-      <button class="level-tile locked">🔒</button>
-      <button class="level-tile locked">🔒</button>
-      <button class="level-tile locked">🔒</button>
-
-      <button class="level-tile locked">🔒</button>
-      <button class="level-tile locked">🔒</button>
-      <button class="level-tile locked">🔒</button>
-      <button class="level-tile locked">🔒</button>
-
-      <button class="level-tile locked">🔒</button>
-      <button class="level-tile locked">🔒</button>
-      <button class="level-tile locked">🔒</button>
-      <button class="level-tile locked">🔒</button>
-
-    </div>
+    <div class="level-grid" id="levelGrid">
+</div>
 
     <button class="close-modal"
       onclick="closeMenuModals()">
@@ -1393,6 +1373,15 @@ const TILE_SIZE = 0.9;
 let candyScore = 0;
 let remainingMoves = 30;
 let candyLevel = 1;
+    let unlockedCandyLevel = Math.max(
+  1,
+  Math.min(
+    100,
+    Number(localStorage.getItem("candyBlastLevel") || 1)
+  )
+);
+
+let selectedCandyLevel = unlockedCandyLevel;
 let gameplayActive = false;
 let selectedCandy = null;
 let boardBusy = false;
@@ -1762,18 +1751,44 @@ async function clearCandyCascades() {
 
 /* GAME DISPLAY */
 
-function updateGameDisplay() {
-  document.getElementById("gameScore").textContent =
-    candyScore;
+function checkGameStatus() {
+  if (candyScore >= 1500) {
+    document.getElementById("gameResultTitle").textContent =
+      "ROYAL VICTORY!";
 
-  document.getElementById("gameMoves").textContent =
-    remainingMoves;
+    document.getElementById("gameResultMessage").textContent =
+      "Amazing! You conquered this candy challenge.";
 
-  document.getElementById("gameLevel").textContent =
-    candyLevel;
+    document.getElementById("gameResult").classList.add("open");
 
-  document.getElementById("levelCount").textContent =
-    candyLevel;
+    if (candyLevel >= unlockedCandyLevel) {
+      unlockedCandyLevel = Math.min(candyLevel + 1, 100);
+
+      localStorage.setItem(
+        "candyBlastLevel",
+        unlockedCandyLevel
+      );
+
+      selectedCandyLevel = unlockedCandyLevel;
+      renderLevelSelection();
+    }
+
+    return true;
+  }
+
+  if (remainingMoves <= 0) {
+    document.getElementById("gameResultTitle").textContent =
+      "TRY AGAIN!";
+
+    document.getElementById("gameResultMessage").textContent =
+      "You ran out of moves. Return to the kingdom and try again.";
+
+    document.getElementById("gameResult").classList.add("open");
+
+    return true;
+  }
+
+  return false;
 }
 
 
@@ -2215,7 +2230,47 @@ function showMenuToast(message) {
     toast.classList.remove("show");
   }, 2800);
 }
+/* ROYAL 100 LEVEL SYSTEM */
 
+function renderLevelSelection() {
+  const grid = document.getElementById("levelGrid");
+
+  if (!grid) return;
+
+  grid.innerHTML = "";
+
+  for (let level = 1; level <= 100; level++) {
+    const button = document.createElement("button");
+
+    button.className = "level-tile";
+
+    if (level > unlockedCandyLevel) {
+      button.classList.add("locked");
+      button.textContent = "🔒";
+      button.disabled = true;
+    } else {
+      button.textContent = level;
+
+      button.onclick = function() {
+        selectCandyLevel(level);
+      };
+    }
+
+    grid.appendChild(button);
+  }
+}
+
+function selectCandyLevel(level) {
+  if (level > unlockedCandyLevel) {
+    showMenuToast("Complete previous levels first!");
+    return;
+  }
+
+  selectedCandyLevel = level;
+  startGameplay();
+}
+
+renderLevelSelection();
 function showGameMessage() {
   closeMenuModals();
   startGameplay();
