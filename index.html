@@ -99,7 +99,243 @@
       text-align: center;
       padding: 20px;
     }
+/* STAGE 2 — ROYAL MAIN MENU */
 
+.menu-shade {
+  position: fixed;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(17,5,39,.45),
+    rgba(20,5,43,.12) 45%,
+    rgba(15,4,34,.72)
+  );
+}
+
+.game-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 18px 24px;
+  pointer-events: none;
+}
+
+.game-menu button {
+  pointer-events: auto;
+  font: inherit;
+}
+
+.top-stats {
+  width: min(100%, 760px);
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.stat-pill {
+  padding: 10px 15px;
+  border: 1px solid #ffdf8a;
+  border-radius: 18px;
+  background: rgba(40,12,70,.85);
+  color: #fff3cf;
+  font-size: 13px;
+  font-weight: 900;
+  text-align: center;
+  box-shadow: 0 5px 18px #0005;
+}
+
+.stat-pill span {
+  color: #ffdb69;
+  font-size: 17px;
+}
+
+.brand-block {
+  text-align: center;
+  margin: auto 0;
+  padding: 20px 8px;
+}
+
+.brand-kicker {
+  display: inline-block;
+  padding: 8px 15px;
+  border: 1px solid #ffe18a;
+  border-radius: 30px;
+  background: #351354dd;
+  color: #ffe6a0;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  margin-bottom: 15px;
+}
+
+.brand-name {
+  color: #ffe17b;
+  font-size: clamp(38px, 9vw, 76px);
+  line-height: .98;
+  font-weight: 1000;
+  text-shadow: 0 4px 0 #9a430d, 0 8px 24px #16051f;
+}
+
+.brand-tagline {
+  color: #fff3d0;
+  font-size: 12px;
+  letter-spacing: 3px;
+  font-weight: 900;
+  margin-top: 14px;
+}
+
+.menu-actions {
+  width: min(100%, 330px);
+  display: grid;
+  gap: 13px;
+  margin: 25px auto 0;
+}
+
+.menu-btn {
+  min-height: 54px;
+  border: 2px solid #ffe49a;
+  border-radius: 17px;
+  color: #4a1762;
+  background: linear-gradient(#fff2b8, #ffbf48);
+  box-shadow: 0 5px 0 #a85b18;
+  font-weight: 1000 !important;
+  font-size: 15px !important;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+
+.menu-btn.secondary {
+  min-height: 46px;
+  color: #fff1d1;
+  background: #401867e8;
+  border-color: #ffda7d;
+  box-shadow: 0 4px 0 #260c48;
+  font-size: 12px !important;
+}
+
+.bottom-menu {
+  width: min(100%, 760px);
+  display: flex;
+  justify-content: center;
+  gap: 9px;
+}
+
+.bottom-menu button {
+  flex: 1;
+  min-height: 43px;
+  border: 1px solid #ffdf8f;
+  border-radius: 14px;
+  background: #250b43e8;
+  color: #fff0cb;
+  font-size: 10px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.menu-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 15;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: #0c031bcc;
+  backdrop-filter: blur(7px);
+}
+
+.menu-modal.open {
+  display: flex;
+}
+
+.modal-card {
+  width: min(100%, 430px);
+  max-height: 82vh;
+  overflow: auto;
+  padding: 24px 20px;
+  border: 2px solid #f7d47c;
+  border-radius: 25px;
+  background: linear-gradient(145deg, #542080, #251044);
+  text-align: center;
+  color: #fff2d1;
+}
+
+.modal-card h2 {
+  color: #ffe17b;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.modal-card p {
+  color: #e9d8f7;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 9px;
+  margin: 18px 0;
+}
+
+.level-tile {
+  min-height: 58px;
+  border: 1px solid #f7d47c;
+  border-radius: 13px;
+  background: linear-gradient(#fff0b2, #f9b83f);
+  color: #54216b;
+  font-weight: 1000;
+  font-size: 18px;
+}
+
+.level-tile.locked {
+  background: #ffffff19;
+  color: #bda9d0;
+  border-color: #ffffff33;
+}
+
+.close-modal {
+  min-height: 43px;
+  width: 100%;
+  border: 1px solid #ffe49a;
+  border-radius: 13px;
+  background: #7134a1;
+  color: white;
+  font-weight: 900;
+}
+
+.menu-toast {
+  position: fixed;
+  z-index: 30;
+  left: 50%;
+  bottom: 86px;
+  transform: translate(-50%, 15px);
+  max-width: calc(100% - 32px);
+  padding: 12px 18px;
+  border: 1px solid #ffe18a;
+  border-radius: 30px;
+  background: #240a3eee;
+  color: #fff0c5;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 800;
+  opacity: 0;
+  transition: .25s;
+  pointer-events: none;
+}
+
+.menu-toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  }
     @media (max-width: 600px) {
       .hud {
         top: 18px;
@@ -132,7 +368,212 @@
   <div class="bottom-message">
     <div class="message">MATCH • BLAST • CONQUER</div>
   </div>
+<!-- STAGE 2: ROYAL CANDY KINGDOM MAIN MENU -->
 
+<style>
+.hud,
+.bottom-message {
+  display: none !important;
+}
+</style>
+
+<div class="menu-shade"></div>
+
+<div class="game-menu">
+
+  <div class="top-stats">
+
+    <div class="stat-pill">
+      ❤️ LIVES<br>
+      <span id="livesCount">5</span>
+    </div>
+
+    <div class="stat-pill">
+      🪙 COINS<br>
+      <span id="coinsCount">0</span>
+    </div>
+
+    <div class="stat-pill">
+      ⭐ LEVEL<br>
+      <span id="levelCount">1</span>
+    </div>
+
+  </div>
+
+  <div class="brand-block">
+
+    <div class="brand-kicker">
+      WELCOME TO THE KINGDOM
+    </div>
+
+    <div class="brand-name">
+      CANDY<br>BLAST 3D
+    </div>
+
+    <div class="brand-tagline">
+      THE ROYAL CANDY KINGDOM
+    </div>
+
+    <div class="brand-tagline">
+      MATCH. BLAST. CONQUER.
+    </div>
+
+    <div class="menu-actions">
+
+      <button
+        class="menu-btn"
+        id="playButton"
+        onclick="showGameMessage()">
+        👑 PLAY NOW
+      </button>
+
+      <button
+        class="menu-btn secondary"
+        onclick="openMenuModal('levelsModal')">
+        🏆 SELECT LEVEL
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="bottom-menu">
+
+    <button onclick="openMenuModal('profileModal')">
+      👤 PROFILE
+    </button>
+
+    <button onclick="openMenuModal('helpModal')">
+      ❓ HOW TO PLAY
+    </button>
+
+    <button onclick="toggleGameSound()" id="soundButton">
+      🔊 SOUND ON
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- LEVEL SELECTION -->
+
+<div class="menu-modal" id="levelsModal">
+
+  <div class="modal-card">
+
+    <h2>👑 ROYAL LEVELS</h2>
+
+    <p>
+      Your royal candy adventure awaits.
+      Complete levels to unlock new kingdoms.
+    </p>
+
+    <div class="level-grid">
+
+      <button class="level-tile"
+        onclick="showGameMessage()">
+        1
+      </button>
+
+      <button class="level-tile locked">🔒</button>
+      <button class="level-tile locked">🔒</button>
+      <button class="level-tile locked">🔒</button>
+
+      <button class="level-tile locked">🔒</button>
+      <button class="level-tile locked">🔒</button>
+      <button class="level-tile locked">🔒</button>
+      <button class="level-tile locked">🔒</button>
+
+      <button class="level-tile locked">🔒</button>
+      <button class="level-tile locked">🔒</button>
+      <button class="level-tile locked">🔒</button>
+      <button class="level-tile locked">🔒</button>
+
+    </div>
+
+    <button class="close-modal"
+      onclick="closeMenuModals()">
+      CLOSE
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- PLAYER PROFILE -->
+
+<div class="menu-modal" id="profileModal">
+
+  <div class="modal-card">
+
+    <h2>👤 ROYAL PLAYER</h2>
+
+    <p>
+      Welcome, Royal Candy Explorer!
+    </p>
+
+    <p>
+      Current Level: <strong>1</strong><br><br>
+      Coins Collected: <strong>0</strong><br><br>
+      Lives Available: <strong>5</strong><br><br>
+      Kingdom: <strong>Royal Candy Kingdom</strong>
+    </p>
+
+    <button class="close-modal"
+      onclick="closeMenuModals()">
+      CLOSE
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- HOW TO PLAY -->
+
+<div class="menu-modal" id="helpModal">
+
+  <div class="modal-card">
+
+    <h2>🍬 HOW TO PLAY</h2>
+
+    <p>
+      Welcome to Candy Blast 3D!
+      <br><br>
+
+      🍭 Match three or more identical candies.
+      <br><br>
+
+      💥 Create special combinations to earn bigger rewards.
+      <br><br>
+
+      ⭐ Complete objectives to earn stars.
+      <br><br>
+
+      👑 Progress through levels and conquer the candy kingdom.
+      <br><br>
+
+      The playable board and matching controls
+      will arrive in the next development stage.
+    </p>
+
+    <button class="close-modal"
+      onclick="closeMenuModals()">
+      GOT IT
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- MENU NOTIFICATION -->
+
+<div class="menu-toast" id="menuToast">
+  Welcome to Candy Blast 3D!
+</div>
   <script type="module">
     import * as THREE from
       'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
@@ -655,7 +1096,94 @@
       document.getElementById('loading').style.display =
         'none';
     }, 1800);
+/* =====================================
+   STAGE 2 — ROYAL MENU CONTROLS
+===================================== */
 
+let gameSoundEnabled = true;
+let toastTimer = null;
+
+function openMenuModal(modalId) {
+  closeMenuModals();
+
+  const modal = document.getElementById(modalId);
+
+  if (modal) {
+    modal.classList.add("open");
+  }
+}
+
+function closeMenuModals() {
+  document.querySelectorAll(".menu-modal").forEach(function(modal) {
+    modal.classList.remove("open");
+  });
+}
+
+function showMenuToast(message) {
+  const toast = document.getElementById("menuToast");
+
+  if (!toast) return;
+
+  toast.textContent = message;
+  toast.classList.add("show");
+
+  if (toastTimer) {
+    clearTimeout(toastTimer);
+  }
+
+  toastTimer = setTimeout(function() {
+    toast.classList.remove("show");
+  }, 2800);
+}
+
+function showGameMessage() {
+  closeMenuModals();
+
+  showMenuToast(
+    "🍬 The playable candy board is coming in Stage 3!"
+  );
+}
+
+function toggleGameSound() {
+  gameSoundEnabled = !gameSoundEnabled;
+
+  const soundButton = document.getElementById("soundButton");
+
+  if (soundButton) {
+    soundButton.textContent = gameSoundEnabled
+      ? "🔊 SOUND ON"
+      : "🔇 SOUND OFF";
+  }
+
+  showMenuToast(
+    gameSoundEnabled
+      ? "Sound setting switched on."
+      : "Sound setting switched off."
+  );
+}
+
+
+/* CLOSE MODALS WHEN BACKGROUND IS TAPPED */
+
+document.querySelectorAll(".menu-modal").forEach(function(modal) {
+  modal.addEventListener("click", function(event) {
+    if (event.target === modal) {
+      closeMenuModals();
+    }
+  });
+});
+
+
+/* ESCAPE KEY SUPPORT */
+
+document.addEvent
+    /* MAKE MENU FUNCTIONS AVAILABLE TO HTML BUTTONS */
+
+window.openMenuModal = openMenuModal;
+window.closeMenuModals = closeMenuModals;
+window.showGameMessage = showGameMessage;
+window.toggleGameSound = toggleGameSound;
+window.showMenuToast = showMenuToast;
   </script>
 </body>
   </html>
