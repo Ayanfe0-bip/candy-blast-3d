@@ -775,6 +775,28 @@
   </div>
 
 </div>
+  <script>
+window.addEventListener("error", function(event) {
+  const loading = document.getElementById("loading");
+
+  if (loading) {
+    loading.style.display = "block";
+    loading.textContent =
+      "ERROR: " + event.message +
+      " | Line: " + event.lineno;
+  }
+});
+
+window.addEventListener("unhandledrejection", function(event) {
+  const loading = document.getElementById("loading");
+
+  if (loading) {
+    loading.style.display = "block";
+    loading.textContent =
+      "PROMISE ERROR: " + event.reason;
+  }
+});
+  </script>
   <script type="module">
     import * as THREE from
       'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
