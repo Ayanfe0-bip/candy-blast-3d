@@ -1980,6 +1980,10 @@ const boardRaycaster = new THREE.Raycaster();
 const boardPointer = new THREE.Vector2();
 
 let dragStartCandy = null;
+let dragCurrentCandy = null;
+let pointerStartX = 0;
+let pointerStartY = 0;
+let isDraggingCandy = false;
 
 function getBoardCandyAtPointer(clientX, clientY) {
   const rect = renderer.domElement.getBoundingClientRect();
@@ -1997,21 +2001,27 @@ function getBoardCandyAtPointer(clientX, clientY) {
     true
   );
 
-  if (!hits.length) return null;
+  for (const hit of hits) {
+    let object = hit.object;
 
-  let object = hits[0].object;
+    while (object && !object.userData.isBoardCandy) {
+      object = object.parent;
+    }
 
-  while (object && !object.userData.isBoardCandy) {
-    object = object.parent;
+    if (!object) continue;
+
+    const row = object.userData.row;
+    const col = object.userData.col;
+
+    const candy = candyBoard[row]?.[col];
+
+    if (candy) return candy;
   }
 
-  if (!object) return null;
-
-  const row = object.userData.row;
-  const col = object.userData.col;
-
-  return candyBoard[row]?.[col] || null;
+  return null;
 }
+
+/* FINGER START */
 
 renderer.domElement.addEventListener(
   "pointerdown",
@@ -2020,14 +2030,57 @@ renderer.domElement.addEventListener(
 
     event.preventDefault();
 
-    renderer.domElement.setPointerCapture(event.pointerId);
-
     dragStartCandy = getBoardCandyAtPointer(
       event.clientX,
       event.clientY
     );
+
+    dragCurrentCandy = dragStartCandy;
+
+    pointerStartX = event.clientX;
+    pointerStartY = event.clientY;
+
+    isDraggingCandy = false;
+
+    if (dragStartCandy) {
+      renderer.domElement.setPointerCapture(event.pointerId);
+    }
   }
 );
+
+/* TRACK FINGER MOVEMENT */
+
+renderer.domElement.addEventListener(
+  "pointermove",
+  function(event) {
+    if (
+      !gameplayActive ||
+      boardBusy ||
+      !dragStartCandy
+    ) return;
+
+    event.preventDefault();
+
+    const movedX = event.clientX - pointerStartX;
+    const movedY = event.clientY - pointerStartY;
+
+    if (
+      Math.abs(movedX) > 8 ||
+      Math.abs(movedY) > 8
+    ) {
+      isDraggingCandy = true;
+    }
+
+    if (isDraggingCandy) {
+      dragCurrentCandy = getBoardCandyAtPointer(
+        event.clientX,
+        event.clientY
+      );
+    }
+  }
+);
+
+/* RELEASE FINGER */
 
 renderer.domElement.addEventListener(
   "pointerup",
@@ -2036,33 +2089,51 @@ renderer.domElement.addEventListener(
 
     if (!gameplayActive || boardBusy) {
       dragStartCandy = null;
-      return;
-    }
-
-    const endCandy = getBoardCandyAtPointer(
-      event.clientX,
-      event.clientY
-    );
-
-    if (!dragStartCandy || !endCandy) {
-      dragStartCandy = null;
+      dragCurrentCandy = null;
+      isDraggingCandy = false;
       return;
     }
 
     const first = dragStartCandy;
-    dragStartCandy = null;
 
-    if (first !== endCandy) {
+    const endCandy = getBoardCandyAtPointer(
+      event.clientX,
+      event.clientY
+    ) || dragCurrentCandy;
+
+    dragStartCandy = null;
+    dragCurrentCandy = null;
+
+    const wasDragging = isDraggingCandy;
+    isDraggingCandy = false;
+
+    if (!first || !endCandy) return;
+
+    /* DRAG SWAP */
+
+    if (wasDragging && first !== endCandy) {
       selectedCandy = null;
       attemptCandySwap(first, endCandy);
       return;
     }
 
+    /* TWO-TAP SWAP */
+
+    if (selectedCandy && selectedCandy !== first) {
+      const previous = selectedCandy;
+      selectedCandy = null;
+
+      attemptCandySwap(previous, first);
+      return;
+    }
+
+    /* SELECT CANDY */
+
     if (!selectedCandy) {
       selectedCandy = first;
 
       document.getElementById("gameInstruction").textContent =
-        "Select or drag to a neighbouring candy!";
+        "Drag to a neighbouring candy or tap another candy!";
 
       return;
     }
@@ -2071,10 +2142,14 @@ renderer.domElement.addEventListener(
   }
 );
 
+/* CANCEL TOUCH */
+
 renderer.domElement.addEventListener(
   "pointercancel",
   function() {
     dragStartCandy = null;
+    dragCurrentCandy = null;
+    isDraggingCandy = false;
   }
 );
 
@@ -2082,9 +2157,10 @@ renderer.domElement.addEventListener(
   "lostpointercapture",
   function() {
     dragStartCandy = null;
+    dragCurrentCandy = null;
+    isDraggingCandy = false;
   }
 );
-
 /* START GAME */
 
 function startGameplay() {
