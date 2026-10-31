@@ -1974,113 +1974,111 @@ async function attemptCandySwap(first, second) {
 }
 
 
-/* BOARD TOUCH AND MOUSE CONTROLS */
+/* BOARD TOUCH, DRAG AND MOUSE CONTROLS */
 
 const boardRaycaster = new THREE.Raycaster();
 const boardPointer = new THREE.Vector2();
+
+let dragStartCandy = null;
+
+function getBoardCandyAtPointer(clientX, clientY) {
+  const rect = renderer.domElement.getBoundingClientRect();
+
+  boardPointer.x =
+    ((clientX - rect.left) / rect.width) * 2 - 1;
+
+  boardPointer.y =
+    -((clientY - rect.top) / rect.height) * 2 + 1;
+
+  boardRaycaster.setFromCamera(boardPointer, camera);
+
+  const hits = boardRaycaster.intersectObjects(
+    boardGroup.children,
+    true
+  );
+
+  if (!hits.length) return null;
+
+  let object = hits[0].object;
+
+  while (object && !object.userData.isBoardCandy) {
+    object = object.parent;
+  }
+
+  if (!object) return null;
+
+  const row = object.userData.row;
+  const col = object.userData.col;
+
+  return candyBoard[row]?.[col] || null;
+}
 
 renderer.domElement.addEventListener(
   "pointerdown",
   function(event) {
     if (!gameplayActive || boardBusy) return;
 
-    const rect = renderer.domElement.getBoundingClientRect();
-
-    boardPointer.x =
-      ((event.clientX - rect.left) / rect.width) * 2 - 1;
-
-    boardPointer.y =
-      -((event.clientY - rect.top) / rect.height) * 2 + 1;
-
-    boardRaycaster.setFromCamera(
-      boardPointer,
-      camera
+    dragStartCandy = getBoardCandyAtPointer(
+      event.clientX,
+      event.clientY
     );
+  }
+);
 
-    const hits = boardRaycaster.intersectObjects(
-      boardGroup.children,
-      true
-    );
-
-    if (!hits.length) return;
-
-    let object = hits[0].object;
-
-    while (
-      object &&
-      !object.userData.isBoardCandy
-    ) {
-      object = object.parent;
+renderer.domElement.addEventListener(
+  "pointerup",
+  function(event) {
+    if (!gameplayActive || boardBusy) {
+      dragStartCandy = null;
+      return;
     }
 
-    if (!object) return;
+    const endCandy = getBoardCandyAtPointer(
+      event.clientX,
+      event.clientY
+    );
 
-    const row = object.userData.row;
-    const col = object.userData.col;
+    if (!dragStartCandy || !endCandy) {
+      dragStartCandy = null;
+      return;
+    }
 
-    const candy = candyBoard[row]?.[col];
+    const first = dragStartCandy;
+    dragStartCandy = null;
 
-    if (!candy) return;
+    if (first !== endCandy) {
+      selectedCandy = null;
+      attemptCandySwap(first, endCandy);
+      return;
+    }
 
     if (!selectedCandy) {
-      selectedCandy = candy;
+      selectedCandy = first;
 
       document.getElementById("gameInstruction").textContent =
-        "Now select a neighbouring candy.";
+        "Now select or drag to a neighbouring candy!";
 
       return;
     }
 
-    if (selectedCandy === candy) {
+    if (selectedCandy === first) {
       selectedCandy = null;
       return;
     }
 
-    const first = selectedCandy;
+    const previous = selectedCandy;
     selectedCandy = null;
 
-    attemptCandySwap(first, candy);
+    attemptCandySwap(previous, first);
   }
 );
 
-
-/* START GAME */
-
-function startGameplay() {
-  closeMenuModals();
-
-  candyScore = 0;
-  remainingMoves = 30;
-  candyLevel = selectedCandyLevel;
-
-  selectedCandy = null;
-  boardBusy = false;
-  gameplayActive = true;
-
-  prepareCandyBoard();
-
-  boardGroup.visible = true;
-  island.visible = false;
-
-  camera.position.set(0, 2.5, 22.5);
-  camera.lookAt(0, 2.5, 6);
-
-  document.querySelector(".game-menu").style.display =
-    "none";
-
-  document.querySelector(".menu-shade").style.display =
-    "none";
-
-  document.getElementById("gameplayHUD").classList.add("active");
-
-  document.getElementById("gameResult").classList.remove("open");
-
-  document.getElementById("gameInstruction").textContent =
-    "Select two neighbouring candies to swap.";
-
-  updateGameDisplay();
-}
-
+renderer.domElement.addEventListener(
+  "pointercancel",
+  function() {
+    dragStartCandy = null;
+  }
+);
 
 /* EXIT GAME */
 
