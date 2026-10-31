@@ -778,7 +778,25 @@
   <script type="module">
     import * as THREE from
       'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
+window.addEventListener("error", function(event) {
+  const loading = document.getElementById("loading");
 
+  if (loading) {
+    loading.style.display = "block";
+    loading.textContent =
+      "GAME ERROR: " + event.message;
+  }
+});
+
+window.addEventListener("unhandledrejection", function(event) {
+  const loading = document.getElementById("loading");
+
+  if (loading) {
+    loading.style.display = "block";
+    loading.textContent =
+      "GAME ERROR: " + event.reason;
+  }
+});
     const scene = new THREE.Scene();
 
     scene.background = new THREE.Color(0x29104c);
