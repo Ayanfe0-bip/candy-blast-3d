@@ -99,6 +99,7 @@
       text-align: center;
       padding: 20px;
     }
+
 /* STAGE 2 — ROYAL MAIN MENU */
 
 .menu-shade {
@@ -298,7 +299,7 @@
 
 .level-tile.locked {
   background: #ffffff19;
-  color: #bda9d0;
+    color: #bda9d0;
   border-color: #ffffff33;
 }
 
@@ -565,7 +566,7 @@
       <button
         class="menu-btn"
         id="playButton"
-        onclick="startGameplay()"
+        onclick="startGameplay()">
         👑 PLAY NOW
       </button>
 
@@ -647,8 +648,7 @@
 <!-- PLAYER PROFILE -->
 
 <div class="menu-modal" id="profileModal">
-
-  <div class="modal-card">
+    <div class="modal-card">
 
     <h2>👤 ROYAL PLAYER</h2>
 
@@ -1167,6 +1167,175 @@
         ]
       );
     }
+          new THREE.BoxGeometry(0.9, 1.65, 0.12),
+      purple,
+      0, 1.45, 1.08,
+      palace
+    );
+
+    sphere(
+      0.28, 1.5, 1.2,
+      0.08,
+      gold,
+      palace
+    );
+
+    // PALACE WINDOWS
+
+    for (const x of [-1.35, 1.35]) {
+      addMesh(
+        new THREE.BoxGeometry(0.65, 0.9, 0.12),
+        turquoise,
+        x, 2.55, 1.08,
+        palace
+      );
+
+      addMesh(
+        new THREE.BoxGeometry(0.12, 1.05, 0.15),
+        gold,
+        x, 2.55, 1.16,
+        palace
+      );
+    }
+
+    // PALACE TOWERS
+
+    for (const x of [-2.2, 2.2]) {
+      for (const z of [-2.1, 0.7]) {
+        cylinder(
+          x, 2.7, z,
+          0.55, 0.65, 3.8,
+          white,
+          palace
+        );
+
+        const towerRoof = addMesh(
+          new THREE.ConeGeometry(0.85, 1.6, 24),
+          red,
+          x, 5.35, z,
+          palace
+        );
+
+        sphere(
+          x, 6.2, z,
+          0.15,
+          gold,
+          palace
+        );
+
+        cylinder(
+          x, 4.55, z,
+          0.65, 0.65, 0.15,
+          gold,
+          palace
+        );
+      }
+    }
+
+    // PALACE BALCONY
+
+    addMesh(
+      new THREE.BoxGeometry(3.5, 0.18, 0.5),
+      gold,
+      0, 3.55, 1.1,
+      palace
+    );
+
+    for (let x = -1.5; x <= 1.5; x += 0.5) {
+      cylinder(
+        x, 3.8, 1.25,
+        0.045, 0.045, 0.5,
+        gold,
+        palace
+      );
+    }
+
+    // CANDY TREES
+
+    function createCandyTree(x, z, material) {
+      const tree = new THREE.Group();
+      island.add(tree);
+
+      cylinder(
+        x, 1.0, z,
+        0.2, 0.28, 1.5,
+        gold,
+        tree
+      );
+
+      sphere(
+        x, 2.1, z,
+        0.9,
+        material,
+        tree
+      );
+
+      sphere(
+        x - 0.3, 2.55, z,
+        0.4,
+        white,
+        tree
+      );
+    }
+
+    createCandyTree(-4.5, -1.8, pink);
+    createCandyTree(4.5, -1.8, turquoise);
+    createCandyTree(-4.4, 2.5, candyYellow);
+    createCandyTree(4.4, 2.5, pink);
+
+    // GIANT LOLLIPOPS
+
+    function createLollipop(x, z, material) {
+      cylinder(
+        x, 1.4, z,
+        0.09, 0.09, 2.5,
+        white
+      );
+
+      sphere(
+        x, 2.9, z,
+        0.75,
+        material
+      );
+
+      sphere(
+        x - 0.22, 3.15, z + 0.48,
+        0.13,
+        white
+      );
+    }
+
+    createLollipop(-5.5, 0, red);
+    createLollipop(5.5, 0, candyYellow);
+
+    // DECORATIVE CANDIES
+
+    const candyMaterials = [
+      pink,
+      turquoise,
+      candyYellow,
+      red,
+      purple,
+      white
+    ];
+
+    for (let i = 0; i < 28; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const distance = 2.5 + Math.random() * 3;
+
+      const x = Math.cos(angle) * distance;
+      const z = Math.sin(angle) * distance;
+
+      sphere(
+        x,
+        0.65 + Math.random() * 0.5,
+        z,
+        0.18 + Math.random() * 0.2,
+        candyMaterials[
+          Math.floor(Math.random() * candyMaterials.length)
+        ]
+      );
+    }
 /* =====================================
    STAGE 3 — ROYAL 3D CANDY MODELS
 ===================================== */
@@ -1228,7 +1397,7 @@ function createRoyalCandy(type, x, y, z, material) {
       0.48, 0, 0,
       candy
     );
- 
+
     leftWrapper.rotation.z = -Math.PI / 2;
     rightWrapper.rotation.z = Math.PI / 2;
 
@@ -1266,9 +1435,7 @@ function createRoyalCandy(type, x, y, z, material) {
     chocolate.rotation.y = Math.PI / 7;
 
     for (let row = -1; row <= 1; row++) {
-
       for (let col = -1; col <= 1; col++) {
-
         sphere(
           col * 0.22,
           0.23,
@@ -1277,11 +1444,8 @@ function createRoyalCandy(type, x, y, z, material) {
           gold,
           candy
         );
-
       }
-
     }
-
   }
 
   animatedCandies.push({
@@ -1316,11 +1480,13 @@ createRoyalCandy(
 createRoyalCandy(
   "lollipop", 0, 1.2, 3.8, purple
 );
-    /* =====================================
+
+
+/* =====================================
    STAGE 3 — ROYAL CANDY SHINE EFFECTS
 ===================================== */
 
-animatedCandies.forEach((candy, index) => {
+animatedCandies.forEach((candy) => {
 
   const shine1 = sphere(
     -0.18, 0.22, 0.38,
@@ -1343,17 +1509,25 @@ animatedCandies.forEach((candy, index) => {
   shine2.material.opacity = 0.65;
 
 });
-    /* =====================================
+
+
+/* =====================================
    STAGE 4 — ROYAL 3D MATCH-3 BOARD
 ===================================== */
 
 const BOARD_SIZE = 8;
 const TILE_SIZE = 0.9;
 
+let candyScore = 0;
+let remainingMoves = 30;
+let candyLevel = 1;
+let gameplayActive = false;
+let selectedCandy = null;
+let boardBusy = false;
+
 const boardGroup = new THREE.Group();
 boardGroup.position.set(0, 2.5, 6);
 boardGroup.visible = false;
-
 scene.add(boardGroup);
 
 const candyBoard = [];
@@ -1367,247 +1541,543 @@ const boardCandyMaterials = [
   white
 ];
 
-/* BOARD BACKGROUND */
-
 const boardBackground = addMesh(
-  new THREE.BoxGeometry(7.55, 7.55, 0.35),
+  new THREE.BoxGeometry(7.55, 7.55, 0.3),
   new THREE.MeshStandardMaterial({
-    color: 0x351052,
-    metalness: 0.45,
-    roughness: 0.3
+    color: 0x321052,
+    metalness: 0.35,
+    roughness: 0.35
   }),
   0, 0, 0,
   boardGroup
 );
 
-/* GOLDEN BOARD BORDER */
+const boardBorderMaterial = gold;
 
-const boardBorderMaterial =
-  new THREE.MeshStandardMaterial({
-    color: 0xffd45c,
-    metalness: 0.8,
-    roughness: 0.2
-  });
-
-const borderTop = addMesh(
-  new THREE.BoxGeometry(7.9, 0.16, 0.45),
+addMesh(
+  new THREE.BoxGeometry(7.8, 0.16, 0.25),
   boardBorderMaterial,
   0, 3.85, 0,
   boardGroup
 );
 
-const borderBottom = addMesh(
-  new THREE.BoxGeometry(7.9, 0.16, 0.
-          /* =========================================
-   STAGE 4 — MATCH-3 GAME ENGINE
-========================================= */
+addMesh(
+  new THREE.BoxGeometry(7.8, 0.16, 0.25),
+  boardBorderMaterial,
+  0, -3.85, 0,
+  boardGroup
+);
 
-let selectedCandy = null;
-let gameplayActive = false;
-let playerScore = 0;
-let remainingMoves = 30;
+addMesh(
+  new THREE.BoxGeometry(0.16, 7.8, 0.25),
+  boardBorderMaterial,
+  -3.85, 0, 0,
+  boardGroup
+);
 
-const boardRaycaster = new THREE.Raycaster();
-const boardPointer = new THREE.Vector2();
+addMesh(
+  new THREE.BoxGeometry(0.16, 7.8, 0.25),
+  boardBorderMaterial,
+  3.85, 0, 0,
+  boardGroup
+);
 
-/* UPDATE GAME DISPLAY */
 
-function updateGameDisplay() {
+/* BOARD TILES */
 
-  document.getElementById("gameScore").textContent =
-    playerScore;
+const tileMaterials = [
+  new THREE.MeshStandardMaterial({
+    color: 0x7540a0,
+    roughness: 0.4
+  }),
+  new THREE.MeshStandardMaterial({
+    color: 0x4d246f,
+    roughness: 0.4
+  })
+];
 
-  document.getElementById("gameMoves").textContent =
-    remainingMoves;
-
+for (let row = 0; row < BOARD_SIZE; row++) {
+  for (let col = 0; col < BOARD_SIZE; col++) {
+    addMesh(
+      new THREE.BoxGeometry(0.84, 0.84, 0.12),
+      tileMaterials[(row + col) % 2],
+      (col - 3.5) * TILE_SIZE,
+      (3.5 - row) * TILE_SIZE,
+      0.2,
+      boardGroup
+    );
+  }
 }
 
-/* SET CANDY POSITION */
+
+/* CREATE BOARD CANDY */
+
+function createBoardCandy(colorIndex, row, col) {
+  const candy = new THREE.Group();
+
+  const material = boardCandyMaterials[colorIndex];
+
+  const body = sphere(
+    0, 0, 0,
+    0.32,
+    material,
+    candy
+  );
+
+  body.scale.set(1, 1, 0.72);
+
+  sphere(
+    -0.1, 0.12, 0.22,
+    0.065,
+    white,
+    candy
+  );
+
+  candy.userData.isBoardCandy = true;
+
+  positionBoardCandy(candy, row, col);
+
+  boardGroup.add(candy);
+
+  return {
+    object: candy,
+    color: colorIndex,
+    row: row,
+    col: col
+  };
+}
+
 
 function positionBoardCandy(candy, row, col) {
-
   candy.row = row;
   candy.col = col;
 
   candy.object.position.set(
     (col - 3.5) * TILE_SIZE,
     (3.5 - row) * TILE_SIZE,
-    0.32
+    0.42
   );
 
   candy.object.userData.row = row;
   candy.object.userData.col = col;
-
 }
 
-/* CREATE A RANDOM CANDY */
 
-function randomBoardColor() {
+/* RANDOM CANDY */
 
+function randomCandyColor() {
   return Math.floor(
     Math.random() * boardCandyMaterials.length
   );
-
 }
 
-/* FIND ALL MATCHES */
 
-function findCandyMatches() {
+/* PREPARE BOARD */
 
-  const matches = new Set();
+function prepareCandyBoard() {
+  candyBoard.length = 0;
 
-  // HORIZONTAL MATCHES
+  boardGroup.children
+    .filter(child => child.userData.isBoardCandy)
+    .forEach(child => boardGroup.remove(child));
 
   for (let row = 0; row < BOARD_SIZE; row++) {
+    candyBoard[row] = [];
 
-    let count = 1;
+    for (let col = 0; col < BOARD_SIZE; col++) {
+      let color;
+      let attempts = 0;
 
-    for (let col = 1; col <= BOARD_SIZE; col++) {
+      do {
+        color = randomCandyColor();
+        attempts++;
+      } while (
+        attempts < 30 &&
+        (
+          (
+            col >= 2 &&
+            candyBoard[row][col - 1]?.color === color &&
+            candyBoard[row][col - 2]?.color === color
+          ) ||
+          (
+            row >= 2 &&
+            candyBoard[row - 1][col]?.color === color &&
+            candyBoard[row - 2][col]?.color === color
+          )
+        )
+      );
 
-      const current =
-        col < BOARD_SIZE
-          ? candyBoard[row][col]
-          : null;
-
-      const previous =
-        candyBoard[row][col - 1];
-
-      if (
-        current &&
-        previous &&
-        current.color === previous.color
-      ) {
-
-        count++;
-
-      } else {
-
-        if (count >= 3) {
-
-          for (
-            let i = col - count;
-            i < col;
-            i++
-          ) {
-
-            matches.add(`${row},${i}`);
-
-          }
-
-        }
-
-        count = 1;
-
-      }
-
+      candyBoard[row][col] =
+        createBoardCandy(color, row, col);
     }
-
   }
-
-  // VERTICAL MATCHES
-
-  for (let col = 0; col < BOARD_SIZE; col++) {
-
-    let count = 1;
-
-    for (let row = 1; row <= BOARD_SIZE; row++) {
-
-      const current =
-        row < BOARD_SIZE
-          ? candyBoard[row][col]
-          : null;
-
-      const previous =
-        candyBoard[row - 1][col];
-
-      if (
-        current &&
-        previous &&
-        current.color === previous.color
-      ) {
-
-        count++;
-
-      } else {
-
-        if (count >= 3) {
-
-          for (
-            let i = row - count;
-            i < row;
-            i++
-          ) {
-
-            matches.add(`${i},${col}`);
-
-          }
-
-        }
-
-        count = 1;
-
-      }
-
-    }
-
-  }
-
-  return Array.from(matches).map(key => {
-
-    const [row, col] = key.split(",").map(Number);
-
-    return { row, col };
-
-  });
-
 }
 
-/* SWAP TWO CANDIES */
+
+/* FIND MATCHES */
+
+function findCandyMatches() {
+  const matches = new Set();
+
+  function addMatch(row, col) {
+    matches.add(row + "," + col);
+  }
+
+  for (let row = 0; row < BOARD_SIZE; row++) {
+    for (let col = 0; col < BOARD_SIZE - 2; col++) {
+      const candy = candyBoard[row][col];
+
+      if (
+        candy &&
+        candyBoard[row][col + 1]?.color === candy.color &&
+        candyBoard[row][col + 2]?.color === candy.color
+      ) {
+        let next = col;
+
+        while (
+          next < BOARD_SIZE &&
+          candyBoard[row][next]?.color === candy.color
+        ) {
+          addMatch(row, next);
+          next++;
+        }
+      }
+    }
+  }
+
+  for (let col = 0; col < BOARD_SIZE; col++) {
+    for (let row = 0; row < BOARD_SIZE - 2; row++) {
+      const candy = candyBoard[row][col];
+
+      if (
+        candy &&
+        candyBoard[row + 1][col]?.color === candy.color &&
+        candyBoard[row + 2][col]?.color === candy.color
+      ) {
+        let next = row;
+
+        while (
+          next < BOARD_SIZE &&
+          candyBoard[next][col]?.color === candy.color
+        ) {
+          addMatch(next, col);
+          next++;
+        }
+      }
+    }
+  }
+
+  return Array.from(matches).map(value => {
+    const parts = value.split(",");
+    return {
+      row: Number(parts[0]),
+      col: Number(parts[1])
+    };
+  });
+}
+
+
+/* SWAP CANDIES */
 
 function swapBoardCandies(first, second) {
-
   const firstRow = first.row;
   const firstCol = first.col;
 
-  const secondRow = second.row;
-  const secondCol = second.col;
+  candyBoard[first.row][first.col] = second;
+  candyBoard[second.row][second.col] = first;
 
-  candyBoard[firstRow][firstCol] = second;
-  candyBoard[secondRow][secondCol] = first;
-
+  positionBoardCandy(first, second.row, second.col);
   positionBoardCandy(second, firstRow, firstCol);
-  positionBoardCandy(first, secondRow, secondCol);
-
 }
 
-/* REMOVE MATCHED CANDIES */
+
+/* REMOVE MATCHES */
 
 function removeCandyMatches(matches) {
-
-  matches.forEach(match => {
-
-    const candy =
-      candyBoard[match.row][match.col];
+  matches.forEach(position => {
+    const candy = candyBoard[position.row][position.col];
 
     if (candy) {
-
       boardGroup.remove(candy.object);
-      /* =========================================
-   STAGE 4 — GAMEPLAY CONTROL
-========================================= */
+      candyBoard[position.row][position.col] = null;
+    }
+  });
 
-const menuCameraPosition = camera.position.clone();
-const menuCameraTarget = new THREE.Vector3(0, 2, 0);
+  candyScore += matches.length * 60;
 
-const LEVEL_TARGET_SCORE = 3000;
+  updateGameDisplay();
+}
+
+
+/* REFILL BOARD */
+
+function refillCandyBoard() {
+  for (let col = 0; col < BOARD_SIZE; col++) {
+    const remaining = [];
+
+    for (let row = BOARD_SIZE - 1; row >= 0; row--) {
+      if (candyBoard[row][col]) {
+        remaining.push(candyBoard[row][col]);
+      }
+    }
+
+    for (let row = BOARD_SIZE - 1; row >= 0; row--) {
+      const candy = remaining[BOARD_SIZE - 1 - row];
+
+      if (candy) {
+        candyBoard[row][col] = candy;
+        positionBoardCandy(candy, row, col);
+      } else {
+        const newCandy = createBoardCandy(
+          randomCandyColor(),
+          row,
+          col
+        );
+
+        candyBoard[row][col] = newCandy;
+      }
+    }
+  }
+}
+
+
+/* RESOLVE MATCHES */
+
+function resolveCandyMatches() {
+  const matches = findCandyMatches();
+
+  if (matches.length === 0) {
+    return false;
+  }
+
+  removeCandyMatches(matches);
+
+  refillCandyBoard();
+
+  return true;
+}
+
+
+function delay(milliseconds) {
+  return new Promise(resolve => {
+    setTimeout(resolve, milliseconds);
+  });
+}
+
+
+async function clearCandyCascades() {
+  let safety = 0;
+
+  while (safety < 20) {
+    const matches = findCandyMatches();
+
+    if (matches.length === 0) break;
+
+    removeCandyMatches(matches);
+
+    await delay(180);
+
+    refillCandyBoard();
+
+    await delay(180);
+
+    safety++;
+  }
+}
+
+
+/* GAME DISPLAY */
+
+function updateGameDisplay() {
+  document.getElementById("gameScore").textContent =
+    candyScore;
+
+  document.getElementById("gameMoves").textContent =
+    remainingMoves;
+
+  document.getElementById("gameLevel").textContent =
+    candyLevel;
+
+  document.getElementById("levelCount").textContent =
+    candyLevel;
+}
+
+
+/* GAME STATUS */
+
+function checkGameStatus() {
+  if (candyScore >= 1500) {
+    document.getElementById("gameResultTitle").textContent =
+      "ROYAL VICTORY!";
+
+    document.getElementById("gameResultMessage").textContent =
+      "Amazing! You conquered this candy challenge.";
+
+    document.getElementById("gameResult").classList.add("open");
+
+    const unlockedLevel = Math.min(
+      candyLevel + 1,
+      100
+    );
+
+    localStorage.setItem(
+      "candyBlastLevel",
+      unlockedLevel
+    );
+
+    return true;
+  }
+
+  if (remainingMoves <= 0) {
+    document.getElementById("gameResultTitle").textContent =
+      "TRY AGAIN!";
+
+    document.getElementById("gameResultMessage").textContent =
+      "You ran out of moves. Return to the kingdom and try again.";
+
+    document.getElementById("gameResult").classList.add("open");
+
+    return true;
+  }
+
+  return false;
+}
+
+
+/* ATTEMPT SWAP */
+
+async function attemptCandySwap(first, second) {
+  if (boardBusy || !gameplayActive) return;
+
+  const distance =
+    Math.abs(first.row - second.row) +
+    Math.abs(first.col - second.col);
+
+  if (distance !== 1) {
+    showMenuToast("Choose a neighbouring candy.");
+    return;
+  }
+
+  boardBusy = true;
+
+  swapBoardCandies(first, second);
+
+  await delay(160);
+
+  const matches = findCandyMatches();
+
+  if (matches.length === 0) {
+    swapBoardCandies(first, second);
+
+    document.getElementById("gameInstruction").textContent =
+      "No match! Try another swap.";
+
+    await delay(180);
+
+    boardBusy = false;
+    return;
+  }
+
+  remainingMoves--;
+
+  await clearCandyCascades();
+
+  updateGameDisplay();
+
+  const finished = checkGameStatus();
+
+  boardBusy = false;
+
+  if (!finished) {
+    document.getElementById("gameInstruction").textContent =
+      "Great match! Keep going!";
+  }
+}
+
+
+/* BOARD TOUCH AND MOUSE CONTROLS */
+
+const boardRaycaster = new THREE.Raycaster();
+const boardPointer = new THREE.Vector2();
+
+renderer.domElement.addEventListener(
+  "pointerdown",
+  function(event) {
+    if (!gameplayActive || boardBusy) return;
+
+    const rect = renderer.domElement.getBoundingClientRect();
+
+    boardPointer.x =
+      ((event.clientX - rect.left) / rect.width) * 2 - 1;
+
+    boardPointer.y =
+      -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+    boardRaycaster.setFromCamera(
+      boardPointer,
+      camera
+    );
+
+    const hits = boardRaycaster.intersectObjects(
+      boardGroup.children,
+      true
+    );
+
+    if (!hits.length) return;
+
+    let object = hits[0].object;
+
+    while (
+      object &&
+      !object.userData.isBoardCandy
+    ) {
+      object = object.parent;
+    }
+
+    if (!object) return;
+
+    const row = object.userData.row;
+    const col = object.userData.col;
+
+    const candy = candyBoard[row]?.[col];
+
+    if (!candy) return;
+
+    if (!selectedCandy) {
+      selectedCandy = candy;
+
+      document.getElementById("gameInstruction").textContent =
+        "Now select a neighbouring candy.";
+
+      return;
+    }
+
+    if (selectedCandy === candy) {
+      selectedCandy = null;
+      return;
+    }
+
+    const first = selectedCandy;
+    selectedCandy = null;
+
+    attemptCandySwap(first, candy);
+  }
+);
+
 
 /* START GAME */
 
 function startGameplay() {
+  closeMenuModals();
 
-  playerScore = 0;
+  candyScore = 0;
   remainingMoves = 30;
+  candyLevel = Number(
+    localStorage.getItem("candyBlastLevel") || 1
+  );
+
   selectedCandy = null;
+  boardBusy = false;
   gameplayActive = true;
 
   prepareCandyBoard();
@@ -1615,145 +2085,58 @@ function startGameplay() {
   boardGroup.visible = true;
   island.visible = false;
 
-  camera.position.set(
-    0,
-    2.5,
-    22.5
-  );
+  camera.position.set(0, 2.5, 22.5);
+  camera.lookAt(0, 2.5, 6);
 
-  camera.lookAt(
-    0,
-    2.5,
-    6
-  );
+  document.querySelector(".game-menu").style.display =
+    "none";
 
-  document.getElementById(
-    "gameplayHUD"
-  ).classList.add("active");
+  document.querySelector(".menu-shade").style.display =
+    "none";
 
-  document.getElementById(
-    "gameLevel"
-  ).textContent =
-    localStorage.getItem("candyLevel") || 1;
+  document.getElementById("gameplayHUD").classList.add("active");
 
-  document.getElementById(
-    "gameInstruction"
-  ).textContent =
+  document.getElementById("gameResult").classList.remove("open");
+
+  document.getElementById("gameInstruction").textContent =
     "Select two neighbouring candies to swap.";
 
-  document.getElementById(
-    "gameResult"
-  ).classList.remove("open");
-
   updateGameDisplay();
-
-  document.querySelectorAll(
-    ".game-menu, .top-stats, .bottom-menu"
-  ).forEach(element => {
-    element.style.display = "none";
-  });
-
 }
 
-/* RETURN TO MAIN MENU */
+
+/* EXIT GAME */
 
 function exitGameplay() {
-
   gameplayActive = false;
+  boardBusy = false;
   selectedCandy = null;
 
   boardGroup.visible = false;
   island.visible = true;
 
-  camera.position.copy(menuCameraPosition);
+  camera.position.set(0, 9, 19);
+  camera.lookAt(0, 2, 0);
 
-  camera.lookAt(menuCameraTarget);
+  document.getElementById("gameplayHUD").classList.remove("active");
 
-  document.getElementById(
-    "gameplayHUD"
-  ).classList.remove("active");
+  document.getElementById("gameResult").classList.remove("open");
 
-  document.getElementById(
-    "gameResult"
-  ).classList.remove("open");
+  document.querySelector(".game-menu").style.display =
+    "flex";
 
-  document.querySelectorAll(
-    ".game-menu, .top-stats, .bottom-menu"
-  ).forEach(element => {
-    element.style.display = "";
-  });
-
+  document.querySelector(".menu-shade").style.display =
+    "block";
 }
 
-/* CHECK GAME PROGRESS */
 
-function checkGameStatus() {
-
-  if (!gameplayActive) return;
-
-  if (playerScore >= LEVEL_TARGET_SCORE) {
-
-    gameplayActive = false;
-
-    document.getElementById(
-      "gameResultTitle"
-    ).textContent =
-      "ROYAL VICTORY! 👑";
-
-    document.getElementById(
-      "gameResultMessage"
-    ).textContent =
-      "Amazing! You reached the level target and conquered the Candy Kingdom!";
-
-    document.getElementById(
-      "gameResult"
-    ).classList.add("open");
-
-    const currentLevel =
-      Number(localStorage.getItem("candyLevel") || 1);
-
-    localStorage.setItem(
-      "candyLevel",
-      Math.min(currentLevel + 1, 100)
-    );
-
-    return;
-
-  }
-
-  if (remainingMoves <= 0) {
-
-    gameplayActive = false;
-
-    document.getElementById(
-      "gameResultTitle"
-    ).textContent =
-      "GAME OVER!";
-
-    document.getElementById(
-      "gameResultMessage"
-    ).textContent =
-      "Your moves are finished. Try again and reach the target score!";
-
-    document.getElementById(
-      "gameResult"
-    ).classList.add("open");
-
-  }
-
-}
-
-/* CLOSE RESULT WINDOW */
+/* CLOSE GAME RESULT */
 
 function closeGameResult() {
-
-  document.getElementById(
-    "gameResult"
-  ).classList.remove("open");
-
+  document.getElementById("gameResult").classList.remove("open");
   exitGameplay();
-
 }
+
 
 /* MAKE GAME FUNCTIONS AVAILABLE */
 
@@ -1761,153 +2144,164 @@ window.startGameplay = startGameplay;
 window.exitGameplay = exitGameplay;
 window.closeGameResult = closeGameResult;
 
-console.log("Gameplay controls ready!");
-    // CLOUDS
 
-    function createCloud(x, y, z) {
-      const cloud = new THREE.Group();
-      scene.add(cloud);
+/* =====================================
+   CLOUDS
+===================================== */
 
-      cloud.position.set(x, y, z);
+function createCloud(x, y, z) {
+  const cloud = new THREE.Group();
+  scene.add(cloud);
 
-      sphere(0, 0, 0, 0.7, white, cloud);
-      sphere(0.6, 0.1, 0, 0.6, white, cloud);
-      sphere(-0.6, 0.1, 0, 0.6, white, cloud);
-      sphere(0.2, 0.4, 0, 0.55, white, cloud);
+  cloud.position.set(x, y, z);
 
-      return cloud;
-    }
+  sphere(0, 0, 0, 0.7, white, cloud);
+  sphere(0.6, 0.1, 0, 0.6, white, cloud);
+  sphere(-0.6, 0.1, 0, 0.6, white, cloud);
+  sphere(0.2, 0.4, 0, 0.55, white, cloud);
 
-    const clouds = [
-      createCloud(-9, 7, -8),
-      createCloud(9, 8, -10),
-      createCloud(-10, 5, 5),
-      createCloud(10, 6, 4)
-    ];
+  return cloud;
+}
 
-    // FLOATING SPARKLES
+const clouds = [
+  createCloud(-9, 7, -8),
+  createCloud(9, 8, -10),
+  createCloud(-10, 5, 5),
+  createCloud(10, 6, 4)
+];
 
-    const sparkles = [];
 
-    for (let i = 0; i < 100; i++) {
-      const material = new THREE.MeshBasicMaterial({
-        color: i % 2 === 0 ? 0xffdf68 : 0xff8dd6
-      });
+/* FLOATING SPARKLES */
 
-      const sparkle = new THREE.Mesh(
-        new THREE.SphereGeometry(0.035, 8, 8),
-        material
-      );
+const sparkles = [];
 
-      sparkle.position.set(
-        (Math.random() - 0.5) * 25,
-        Math.random() * 12,
-        (Math.random() - 0.5) * 20
-      );
+for (let i = 0; i < 100; i++) {
+  const material = new THREE.MeshBasicMaterial({
+    color: i % 2 === 0 ? 0xffdf68 : 0xff8dd6
+  });
 
-      scene.add(sparkle);
-      sparkles.push(sparkle);
-    }
+  const sparkle = new THREE.Mesh(
+    new THREE.SphereGeometry(0.035, 8, 8),
+    material
+  );
 
-    // ANIMATION
+  sparkle.position.set(
+    (Math.random() - 0.5) * 25,
+    Math.random() * 12,
+    (Math.random() - 0.5) * 20
+  );
 
-    let clock = new THREE.Clock();
+  scene.add(sparkle);
+  sparkles.push(sparkle);
+}
 
-    function animate() {
-      requestAnimationFrame(animate);
 
-      const time = clock.getElapsedTime();
+/* ANIMATION */
 
-      island.rotation.y = Math.sin(time * 0.2) * 0.04;
-       /* STAGE 3 — FLOATING CANDY ANIMATIONS */
+let clock = new THREE.Clock();
 
-animatedCandies.forEach((candy) => {
+function animate() {
+  requestAnimationFrame(animate);
 
-  const object = candy.object;
+  const time = clock.getElapsedTime();
 
-  object.position.y =
-    candy.baseY +
-    Math.sin(time * candy.speed + candy.phase) * 0.16;
+  if (!gameplayActive) {
+    island.rotation.y = Math.sin(time * 0.2) * 0.04;
+  }
 
-  object.rotation.y += 0.012 * candy.speed;
+  animatedCandies.forEach((candy) => {
+    const object = candy.object;
 
-  const scale =
-    1 + Math.sin(time * 2 + candy.phase) * 0.025;
+    object.position.y =
+      candy.baseY +
+      Math.sin(time * candy.speed + candy.phase) * 0.16;
 
-  object.scale.set(scale, scale, scale);
+    object.rotation.y += 0.012 * candy.speed;
 
+    const scale =
+      1 + Math.sin(time * 2 + candy.phase) * 0.025;
+
+    object.scale.set(scale, scale, scale);
+  });
+
+  clouds.forEach((cloud, index) => {
+    cloud.position.x +=
+      Math.sin(time * 0.3 + index) * 0.002;
+  });
+
+  sparkles.forEach((sparkle, index) => {
+    sparkle.position.y +=
+      Math.sin(time * 1.5 + index) * 0.002;
+
+    sparkle.rotation.y += 0.01;
+  });
+
+  renderer.render(scene, camera);
+}
+
+animate();
+
+
+/* CAMERA MOVEMENT */
+
+let targetX = 0;
+let targetY = 0;
+
+window.addEventListener("pointermove", (event) => {
+  targetX =
+    (event.clientX / window.innerWidth - 0.5) * 0.8;
+
+  targetY =
+    (event.clientY / window.innerHeight - 0.5) * 0.3;
 });
-      clouds.forEach((cloud, index) => {
-        cloud.position.x +=
-          Math.sin(time * 0.3 + index) * 0.002;
-      });
 
-      sparkles.forEach((sparkle, index) => {
-        sparkle.position.y +=
-          Math.sin(time * 1.5 + index) * 0.002;
+function updateCamera() {
+  if (!gameplayActive) {
+    camera.position.x +=
+      (targetX - camera.position.x * 0.03) * 0.025;
 
-        sparkle.rotation.y += 0.01;
-      });
+    camera.position.y +=
+      (9 + targetY - camera.position.y) * 0.015;
 
-      renderer.render(scene, camera);
-    }
+    camera.lookAt(0, 2, 0);
+  }
 
-    animate();
+  requestAnimationFrame(updateCamera);
+}
 
-    // MOBILE AND DESKTOP CAMERA MOVEMENT
+updateCamera();
 
-    let targetX = 0;
-    let targetY = 0;
 
-    window.addEventListener('pointermove', (event) => {
-      targetX =
-        (event.clientX / window.innerWidth - 0.5) * 0.8;
+/* RESPONSIVE SCREEN */
 
-      targetY =
-        (event.clientY / window.innerHeight - 0.5) * 0.3;
-    });
+window.addEventListener("resize", () => {
+  camera.aspect =
+    window.innerWidth / window.innerHeight;
 
-    function updateCamera() {
-      camera.position.x +=
-        (targetX - camera.position.x * 0.03) * 0.025;
+  camera.fov =
+    window.innerWidth < 600 ? 48 : 45;
 
-      camera.position.y +=
-        (9 + targetY - camera.position.y) * 0.015;
+  camera.updateProjectionMatrix();
 
-      camera.lookAt(0, 2, 0);
+  renderer.setPixelRatio(
+    Math.min(window.devicePixelRatio, 1.7)
+  );
 
-      requestAnimationFrame(updateCamera);
-    }
+  renderer.setSize(
+    window.innerWidth,
+    window.innerHeight
+  );
+});
 
-    updateCamera();
 
-    // RESPONSIVE SCREEN
+/* LOADING SCREEN */
 
-    window.addEventListener('resize', () => {
-      camera.aspect =
-        window.innerWidth / window.innerHeight;
+setTimeout(() => {
+  document.getElementById("loading").style.display =
+    "none";
+}, 1800);
 
-      camera.fov =
-        window.innerWidth < 600 ? 48 : 45;
 
-      camera.updateProjectionMatrix();
-
-      renderer.setPixelRatio(
-        Math.min(window.devicePixelRatio, 1.7)
-      );
-
-      renderer.setSize(
-        window.innerWidth,
-        window.innerHeight
-      );
-    });
-
-    // LOADING SCREEN
-
-    setTimeout(() => {
-      document.getElementById('loading').style.display =
-        'none';
-    }, 1800);
 /* =====================================
    STAGE 2 — ROYAL MENU CONTROLS
 ===================================== */
@@ -1950,10 +2344,7 @@ function showMenuToast(message) {
 
 function showGameMessage() {
   closeMenuModals();
-
-  showMenuToast(
-    "🍬 The playable candy board is coming in Stage 3!"
-  );
+  startGameplay();
 }
 
 function toggleGameSound() {
@@ -1988,14 +2379,21 @@ document.querySelectorAll(".menu-modal").forEach(function(modal) {
 
 /* ESCAPE KEY SUPPORT */
 
-document.addEvent
-    /* MAKE MENU FUNCTIONS AVAILABLE TO HTML BUTTONS */
+document.addEventListener("keydown", function(event) {
+  if (event.key === "Escape") {
+    closeMenuModals();
+  }
+});
+
+
+/* MAKE MENU FUNCTIONS AVAILABLE TO HTML BUTTONS */
 
 window.openMenuModal = openMenuModal;
 window.closeMenuModals = closeMenuModals;
 window.showGameMessage = showGameMessage;
 window.toggleGameSound = toggleGameSound;
 window.showMenuToast = showMenuToast;
+
   </script>
 </body>
-  </html>
+</html>
