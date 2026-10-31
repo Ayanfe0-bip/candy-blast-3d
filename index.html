@@ -1027,27 +1027,7 @@ function createRoyalCandy(type, x, y, z, material) {
       0.48, 0, 0,
       candy
     );
-/* STAGE 3 — FLOATING CANDY ANIMATIONS */
-
-animatedCandies.forEach((candy) => {
-
-  const object = candy.object;
-
-  // Gentle floating movement
-  object.position.y =
-    candy.baseY +
-    Math.sin(time * candy.speed + candy.phase) * 0.16;
-
-  // Continuous rotation
-  object.rotation.y += 0.012 * candy.speed;
-
-  // Gentle bouncing effect
-  const scale =
-    1 + Math.sin(time * 2 + candy.phase) * 0.025;
-
-  object.scale.set(scale, scale, scale);
-
-});
+ 
     leftWrapper.rotation.z = -Math.PI / 2;
     rightWrapper.rotation.z = Math.PI / 2;
 
@@ -1219,7 +1199,24 @@ animatedCandies.forEach((candy, index) => {
       const time = clock.getElapsedTime();
 
       island.rotation.y = Math.sin(time * 0.2) * 0.04;
+       /* STAGE 3 — FLOATING CANDY ANIMATIONS */
 
+animatedCandies.forEach((candy) => {
+
+  const object = candy.object;
+
+  object.position.y =
+    candy.baseY +
+    Math.sin(time * candy.speed + candy.phase) * 0.16;
+
+  object.rotation.y += 0.012 * candy.speed;
+
+  const scale =
+    1 + Math.sin(time * 2 + candy.phase) * 0.025;
+
+  object.scale.set(scale, scale, scale);
+
+});
       clouds.forEach((cloud, index) => {
         cloud.position.x +=
           Math.sin(time * 0.3 + index) * 0.002;
