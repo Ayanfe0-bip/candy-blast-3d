@@ -2079,7 +2079,42 @@ renderer.domElement.addEventListener(
     dragStartCandy = null;
   }
 );
+/* START GAME */
 
+function startGameplay() {
+  closeMenuModals();
+
+  candyScore = 0;
+  remainingMoves = 30;
+  candyLevel = selectedCandyLevel;
+
+  selectedCandy = null;
+  boardBusy = false;
+  gameplayActive = true;
+
+  prepareCandyBoard();
+
+  boardGroup.visible = true;
+  island.visible = false;
+
+  camera.position.set(0, 2.5, 22.5);
+  camera.lookAt(0, 2.5, 6);
+
+  document.querySelector(".game-menu").style.display =
+    "none";
+
+  document.querySelector(".menu-shade").style.display =
+    "none";
+
+  document.getElementById("gameplayHUD").classList.add("active");
+
+  document.getElementById("gameResult").classList.remove("open");
+
+  document.getElementById("gameInstruction").textContent =
+    "Select two neighbouring candies to swap.";
+
+  updateGameDisplay();
+      }
 /* EXIT GAME */
 
 function exitGameplay() {
