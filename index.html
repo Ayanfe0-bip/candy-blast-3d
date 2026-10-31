@@ -589,7 +589,9 @@
     <button onclick="openMenuModal('helpModal')">
       ❓ HOW TO PLAY
     </button>
-
+<button onclick="openMenuModal('kingdomMapModal')">
+  🗺️ KINGDOM MAP
+</button>
     <button onclick="toggleGameSound()" id="soundButton">
       🔊 SOUND ON
     </button>
@@ -598,7 +600,118 @@
 
 </div>
 
+<!-- ROYAL KINGDOM MAP --><div class="menu-modal" id="kingdomMapModal">  <div class="modal-card" style="
+    width:min(100%,480px);
+    background:linear-gradient(160deg,#602c91,#251044 75%);
+  "><div style="
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:3px;
+  color:#ffdf8a;
+  margin-bottom:8px;
+">
+  YOUR ROYAL ADVENTURE
+</div>
 
+<h2 style="font-size:27px;">
+  🗺️ KINGDOM MAP
+</h2>
+
+<p>
+  Explore ten magical kingdoms.
+  Complete levels to unlock new destinations!
+</p>
+
+<div style="
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin:20px 0;
+  text-align:left;
+">
+
+  <div style="background:linear-gradient(145deg,#f6b8e4,#9d4fc7);padding:15px;border-radius:17px;color:#39124f;border:2px solid #ffe18a;">
+    <div style="font-size:30px;">🏰</div>
+    <strong>01. Royal Candy</strong>
+    <div style="font-size:11px;margin-top:5px;">Levels 1–10</div>
+    <div style="font-size:11px;margin-top:7px;">👑 Starting Kingdom</div>
+  </div>
+
+  <div style="background:linear-gradient(145deg,#8b593f,#4b241b);padding:15px;border-radius:17px;color:#fff0d6;border:1px solid #d9a16d;">
+    <div style="font-size:30px;">🍫</div>
+    <strong>02. Chocolate Valley</strong>
+    <div style="font-size:11px;margin-top:5px;">Levels 11–20</div>
+    <div style="font-size:11px;margin-top:7px;">🔒 To Be Unlocked</div>
+  </div>
+
+  <div style="background:linear-gradient(145deg,#a8efb0,#328b65);padding:15px;border-radius:17px;color:#123d32;border:1px solid #e1ffb5;">
+    <div style="font-size:30px;">🍭</div>
+    <strong>03. Lollipop Forest</strong>
+    <div style="font-size:11px;margin-top:5px;">Levels 21–30</div>
+    <div style="font-size:11px;margin-top:7px;">🔒 To Be Unlocked</div>
+  </div>
+
+  <div style="background:linear-gradient(145deg,#f5a4cf,#bd477e);padding:15px;border-radius:17px;color:#511332;border:1px solid #ffe0ef;">
+    <div style="font-size:30px;">🐻</div>
+    <strong>04. Gummy Kingdom</strong>
+    <div style="font-size:11px;margin-top:5px;">Levels 31–40</div>
+    <div style="font-size:11px;margin-top:7px;">🔒 To Be Unlocked</div>
+  </div>
+
+  <div style="background:linear-gradient(145deg,#bdeeff,#639cdb);padding:15px;border-radius:17px;color:#15365b;border:1px solid #e5f9ff;">
+    <div style="font-size:30px;">🍦</div>
+    <strong>05. Ice Cream Empire</strong>
+    <div style="font-size:11px;margin-top:5px;">Levels 41–50</div>
+    <div style="font-size:11px;margin-top:7px;">🔒 To Be Unlocked</div>
+  </div>
+
+  <div style="background:linear-gradient(145deg,#a9efc8,#348d75);padding:15px;border-radius:17px;color:#103f37;border:1px solid #d7ffec;">
+    <div style="font-size:30px;">🍬</div>
+    <strong>06. Jellybean Jungle</strong>
+    <div style="font-size:11px;margin-top:5px;">Levels 51–60</div>
+    <div style="font-size:11px;margin-top:7px;">🔒 To Be Unlocked</div>
+  </div>
+
+  <div style="background:linear-gradient(145deg,#d9d2ff,#8172cf);padding:15px;border-radius:17px;color:#30235e;border:1px solid #f0eaff;">
+    <div style="font-size:30px;">💎</div>
+    <strong>07. Crystal Peaks</strong>
+    <div style="font-size:11px;margin-top:5px;">Levels 61–70</div>
+    <div style="font-size:11px;margin-top:7px;">🔒 To Be Unlocked</div>
+  </div>
+
+  <div style="background:linear-gradient(145deg,#fff0c5,#e4a8b7);padding:15px;border-radius:17px;color:#69364f;border:1px solid #fff5d7;">
+    <div style="font-size:30px;">☁️</div>
+    <strong>08. Marshmallow Clouds</strong>
+    <div style="font-size:11px;margin-top:5px;">Levels 71–80</div>
+    <div style="font-size:11px;margin-top:7px;">🔒 To Be Unlocked</div>
+  </div>
+
+  <div style="background:linear-gradient(145deg,#f7d77f,#b86c39);padding:15px;border-radius:17px;color:#512b16;border:1px solid #fff0b5;">
+    <div style="font-size:30px;">🏜️</div>
+    <strong>09. Caramel Desert</strong>
+    <div style="font-size:11px;margin-top:5px;">Levels 81–90</div>
+    <div style="font-size:11px;margin-top:7px;">🔒 To Be Unlocked</div>
+  </div>
+
+  <div style="background:linear-gradient(145deg,#ffeaa0,#dc8bc9);padding:15px;border-radius:17px;color:#53275c;border:2px solid #ffe18a;">
+    <div style="font-size:30px;">👑</div>
+    <strong>10. Royal Final Realm</strong>
+    <div style="font-size:11px;margin-top:5px;">Levels 91–100</div>
+    <div style="font-size:11px;margin-top:7px;">🔒 Final Challenge</div>
+  </div>
+
+</div>
+
+<p style="font-size:11px;">
+  Kingdom access and level progression will be connected in the next stage.
+</p>
+
+<button class="close-modal" onclick="closeMenuModals()">
+  RETURN TO KINGDOM
+</button>
+
+  </div></div><!-- END ROYAL KINGDOM MAP -->
+  
 <!-- LEVEL SELECTION -->
 
 <div class="menu-modal" id="levelsModal">
