@@ -1792,47 +1792,6 @@ function checkGameStatus() {
 }
 
 
-/* GAME STATUS */
-
-function checkGameStatus() {
-  if (candyScore >= 1500) {
-    document.getElementById("gameResultTitle").textContent =
-      "ROYAL VICTORY!";
-
-    document.getElementById("gameResultMessage").textContent =
-      "Amazing! You conquered this candy challenge.";
-
-    document.getElementById("gameResult").classList.add("open");
-
-    const unlockedLevel = Math.min(
-      candyLevel + 1,
-      100
-    );
-
-    localStorage.setItem(
-      "candyBlastLevel",
-      unlockedLevel
-    );
-
-    return true;
-  }
-
-  if (remainingMoves <= 0) {
-    document.getElementById("gameResultTitle").textContent =
-      "TRY AGAIN!";
-
-    document.getElementById("gameResultMessage").textContent =
-      "You ran out of moves. Return to the kingdom and try again.";
-
-    document.getElementById("gameResult").classList.add("open");
-
-    return true;
-  }
-
-  return false;
-}
-
-
 /* ATTEMPT SWAP */
 
 async function attemptCandySwap(first, second) {
