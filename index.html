@@ -1961,9 +1961,7 @@ function startGameplay() {
 
   candyScore = 0;
   remainingMoves = 30;
-  candyLevel = Number(
-    localStorage.getItem("candyBlastLevel") || 1
-  );
+  candyLevel = selectedCandyLevel;
 
   selectedCandy = null;
   boardBusy = false;
@@ -2032,7 +2030,7 @@ function closeGameResult() {
 window.startGameplay = startGameplay;
 window.exitGameplay = exitGameplay;
 window.closeGameResult = closeGameResult;
-
+window.selectCandyLevel = selectCandyLevel;
 
 /* =====================================
    CLOUDS
