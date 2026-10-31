@@ -622,8 +622,7 @@
   Complete levels to unlock new destinations!
 </p>
 
-<div style="
-  display:grid;
+<div id="kingdomCards" style="
   grid-template-columns:repeat(2,minmax(0,1fr));
   gap:12px;
   margin:20px 0;
@@ -1494,7 +1493,7 @@ let candyLevel = 1;
   )
 );
 
-let selectedCandyLevel = unlockedCandyLevel;
+let selectedCandyLevel = unlockedCandyLevel;  let selectedKingdom = 1;
 let gameplayActive = false;
 let selectedCandy = null;
 let boardBusy = false;
@@ -2301,44 +2300,132 @@ function showMenuToast(message) {
   }, 2800);
 }
 /* ROYAL 100 LEVEL SYSTEM */
-
 function renderLevelSelection() {
-  const grid = document.getElementById("levelGrid");
+const grid = document.getElementById("levelGrid");
 
-  if (!grid) return;
+if (!grid) return;
 
-  grid.innerHTML = "";
+grid.innerHTML = "";
 
-  for (let level = 1; level <= 100; level++) {
-    const button = document.createElement("button");
+const firstLevel = (selectedKingdom - 1) * 10 + 1;
+const lastLevel = Math.min(firstLevel + 9, 100);
 
-    button.className = "level-tile";
+const heading = document.querySelector("#levelsModal h2");
+const description = document.querySelector("#levelsModal p");
 
-    if (level > unlockedCandyLevel) {
-      button.classList.add("locked");
-      button.textContent = "🔒";
-      button.disabled = true;
-    } else {
-      button.textContent = level;
+const kingdomNames = [
+"Royal Candy Kingdom",
+"Chocolate Valley",
+"Lollipop Forest",
+"Gummy Bear Kingdom",
+"Ice Cream Empire",
+"Jellybean Jungle",
+"Crystal Sugar Peaks",
+"Marshmallow Clouds",
+"Caramel Desert",
+"Royal Final Realm"
+];
 
-      button.onclick = function() {
-        selectCandyLevel(level);
-      };
-    }
+if (heading) {
+heading.textContent =
+"👑 " + kingdomNames[selectedKingdom - 1];
+}
 
-    grid.appendChild(button);
+if (description) {
+description.textContent =
+"Choose a level from " +
+firstLevel +
+" to " +
+lastLevel +
+". Complete levels to unlock more adventures!";
+}
+
+for (let level = firstLevel; level <= lastLevel; level++) {
+const button = document.createElement("button");
+
+button.className = "level-tile";
+
+if (level > unlockedCandyLevel) {
+  button.classList.add("locked");
+  button.textContent = "🔒";
+  button.disabled = true;
+} else {
+  button.textContent = level;
+
+  button.onclick = function() {
+    selectCandyLevel(level);
+  };
+}
+
+grid.appendChild(button);
+
+}
+}
+
+function renderKingdomMap() {
+const container = document.getElementById("kingdomCards");
+
+if (!container) return;
+
+const cards = Array.from(container.children);
+
+cards.forEach(function(card, index) {
+const kingdomNumber = index + 1;
+const firstLevel = (kingdomNumber - 1) * 10 + 1;
+const status = card.lastElementChild;
+
+const isUnlocked = firstLevel <= unlockedCandyLevel;
+
+card.style.cursor = "pointer";
+card.style.transition = "transform 0.2s ease";
+
+card.onclick = function() {
+  selectKingdom(kingdomNumber);
+};
+
+if (status) {
+  if (isUnlocked) {
+    status.textContent =
+      kingdomNumber === 1
+        ? "👑 ENTER KINGDOM"
+        : "✨ KINGDOM UNLOCKED";
+  } else {
+    status.textContent = "🔒 TO BE UNLOCKED";
   }
+}
+
+});
+}
+
+function selectKingdom(kingdomNumber) {
+const firstLevel = (kingdomNumber - 1) * 10 + 1;
+
+if (firstLevel > unlockedCandyLevel) {
+showMenuToast(
+"🔒 Complete previous levels to unlock this kingdom!"
+);
+return;
+}
+
+selectedKingdom = kingdomNumber;
+
+renderLevelSelection();
+
+openMenuModal("levelsModal");
 }
 
 function selectCandyLevel(level) {
-  if (level > unlockedCandyLevel) {
-    showMenuToast("Complete previous levels first!");
-    return;
-  }
-
-  selectedCandyLevel = level;
-  startGameplay();
+if (level > unlockedCandyLevel) {
+showMenuToast("Complete previous levels first!");
+return;
 }
+
+selectedCandyLevel = level;
+startGameplay();
+}
+
+renderKingdomMap();
+  
 
 renderLevelSelection();
 function showGameMessage() {
