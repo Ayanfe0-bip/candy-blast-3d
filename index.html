@@ -2018,6 +2018,10 @@ renderer.domElement.addEventListener(
   function(event) {
     if (!gameplayActive || boardBusy) return;
 
+    event.preventDefault();
+
+    renderer.domElement.setPointerCapture(event.pointerId);
+
     dragStartCandy = getBoardCandyAtPointer(
       event.clientX,
       event.clientY
@@ -2028,6 +2032,8 @@ renderer.domElement.addEventListener(
 renderer.domElement.addEventListener(
   "pointerup",
   function(event) {
+    event.preventDefault();
+
     if (!gameplayActive || boardBusy) {
       dragStartCandy = null;
       return;
@@ -2056,20 +2062,12 @@ renderer.domElement.addEventListener(
       selectedCandy = first;
 
       document.getElementById("gameInstruction").textContent =
-        "Now select or drag to a neighbouring candy!";
+        "Select or drag to a neighbouring candy!";
 
       return;
     }
 
-    if (selectedCandy === first) {
-      selectedCandy = null;
-      return;
-    }
-
-    const previous = selectedCandy;
     selectedCandy = null;
-
-    attemptCandySwap(previous, first);
   }
 );
 
@@ -2079,6 +2077,14 @@ renderer.domElement.addEventListener(
     dragStartCandy = null;
   }
 );
+
+renderer.domElement.addEventListener(
+  "lostpointercapture",
+  function() {
+    dragStartCandy = null;
+  }
+);
+
 /* START GAME */
 
 function startGameplay() {
